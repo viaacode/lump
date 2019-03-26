@@ -14,6 +14,7 @@
 #
 import os
 import sys
+from datetime import datetime
 
 root_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 sys.path.insert(0, os.path.abspath(root_dir))
@@ -21,7 +22,7 @@ sys.path.insert(0, os.path.abspath(root_dir))
 # -- Project information -----------------------------------------------------
 
 project = 'lump'
-copyright = '2019, VIAA'
+copyright = '%d, VIAA' % (datetime.today().year,)
 author = 'VIAA'
 
 # The short X.Y version
