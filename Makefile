@@ -4,7 +4,7 @@ test:
 	pytest --doctest-modules --verbose
 
 docs: apidocs
-	cd docs/ && make clean html # && touch build/html/.nojekyll
+	cd docs/ && make clean html
 
 clean:
 	cd docs/ && make clean
@@ -17,7 +17,7 @@ gh-pages: docs
 	git clone "$$GITORIGIN" -b gh-pages --single-branch "$$TMPDIR"; \
 	rm -r "$$TMPDIR/"*; \
 	echo "lump.mikesmith.eu" > "$$TMPDIR/CNAME"; \
-	cp -r docs/build/html/* "$$TMPDIR"; \
+	cp -r docs/build/html/ "$$TMPDIR"; \
 	cd "$$TMPDIR" ;\
 	git add -A && git commit -a -m 'update docs' && git push --set-upstream origin gh-pages
 
