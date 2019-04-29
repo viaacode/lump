@@ -338,4 +338,3 @@ class OptimizedFileCacher(CacheProxy):
         cacher = CacheLocker(cacher)
 
         super().__init__(cacher)
-

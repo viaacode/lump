@@ -2,6 +2,7 @@
 
 test:
 	pytest --doctest-modules --verbose
+	pycodestyle --max-line-length=120 src tests
 
 docs: apidocs
 	cd docs/ && make clean html

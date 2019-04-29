@@ -86,6 +86,7 @@ def log_call(logger: logging.Logger, log_level=None, result=None):
         return _
     return _log_call
 
+
 def exception_redirect(new_exception_class, old_exception_class=Exception, logger=None):
     """
     Decorator to replace a given exception to another Exception class, with optional exception logging.
@@ -234,4 +235,3 @@ def retry(tries=5, logger=None, sleep=None):
                         time.sleep(sleep)
         return _decorator
     return _
-
