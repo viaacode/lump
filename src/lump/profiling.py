@@ -20,16 +20,21 @@ class timeit:
     """
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
+    postfix = ': %dms'
 
-    def __init__(self, text=None, min_time=None, callback=None):
+    def __init__(self, text=None, min_time=None, callback=None, logger=None, postfix=None):
         """
         :param text: str
-        :param min_time: int Minimum duration to start reporting in milliseconds
+        :param min_time: int Minimum duration to start reporting in milsliseconds
         :param callback: callable
         """
         self.text = text
         self.min_time = min_time
         self.start = time.monotonic()
+        if logger is not None:
+            self.logger = logger
+        if postfix is not None:
+            self.postfix = postfix
         self.callback = self._default_callback if callback is None else callback
 
     def restart(self):
@@ -51,7 +56,8 @@ class timeit:
         return self.logger
 
     def _default_callback(self, ms, is_slow, text, kind, value, traceback):
+        postfix = self.postfix
         if self.min_time is None:
-            self.logger.info(text + ': %dms', ms)
+            self.logger.info(text + postfix, ms)
         elif is_slow:
-            self.logger.warning(text + ': %dms', ms)
+            self.logger.warning(text + postfix, ms)
