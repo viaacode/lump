@@ -1,7 +1,7 @@
 .PHONY: docs test clean gh-pages apidocs
 
 test:
-	pytest --cov=src --cov-report html tests/ --doctest-modules --verbose
+	pytest --cov=src --cov-report html tests/ --doctest-modules src --verbose
 	pycodestyle --max-line-length=120 src tests
 
 docs: apidocs

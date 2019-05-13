@@ -118,8 +118,18 @@ def exception_redirect(new_exception_class, old_exception_class=Exception, logge
 
 def memoize(f, cacher=None):
     """Usage:
-    @memoize
-    def someFunc():
+
+    >>> called = 0
+    >>> @memoize
+    ... def someFunc():
+    ...     global called
+    ...     called += 1
+    ...     return called
+    >>>
+    >>> someFunc()
+    1
+    >>> someFunc()
+    1
     """
     if cacher is None:
         cacher = LocalCacher(max_items=50)
@@ -142,18 +152,16 @@ def memoize(f, cacher=None):
 
 def cache(cacher=None):
     """Usage:
-    @cache(LocalCacher())
-    def someFunc():
 
-    > @cache
-    > def test():
-    >   print 'test'
-    >   return 'result'
-    >
-    > test()
+    >>> @cache()
+    ... def test():
+    ...   print('test')
+    ...   return 'result'
+    >>>
+    >>> test()
     test
     'result'
-    > test()
+    >>> test()
     'result'
     """
     def _(f):
