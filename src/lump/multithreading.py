@@ -354,21 +354,3 @@ def multithreaded(*args, class_method_with_self=False, pre_start=False, **kwargs
 
 
 multithreadedmethod = partial(multithreaded, class_method_with_self=True)
-
-
-class __ExtraTests:
-    """
-    >>> class A:
-    ...    @multithreadedmethod()
-    ...    def test(self, *args, **kwargs):
-    ...        pass
-    ...
-    ...    def get_multithread(self):
-    ...        return self.test._multithread
-    >>> b = A()
-    >>> type(b.test._multithread) is MultiThread
-    True
-    >>> type(b.get_multithread()) is MultiThread
-    True
-    """
-    pass
