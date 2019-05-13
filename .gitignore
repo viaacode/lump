@@ -1,5 +1,6 @@
 # sphinx documentation
 docs/build/
+docs/extra/coverage
 
 # python caches and build
 __pycache__

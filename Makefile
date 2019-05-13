@@ -1,10 +1,10 @@
 .PHONY: docs test clean gh-pages apidocs
 
 test:
-	pytest --cov=src --cov-report html tests/ --doctest-modules src --verbose
+	pytest --cov=src --cov-report html:docs/extra/coverage tests/ --doctest-modules src --verbose
 	pycodestyle --max-line-length=120 src tests
 
-docs: apidocs
+docs: test apidocs
 	cd docs/ && make clean html
 
 clean:
