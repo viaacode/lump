@@ -10,8 +10,9 @@ logger = logging.getLogger(__name__)
 
 
 class DictCacher(dict):
-    """Simple 'Local' cacher using a new dict... Usable to re-use same interface
-       for other classes...
+    """
+    Simple 'Local' cacher using a new dict... Usable to re-use same interface
+    for other classes...
 
     >>> cache = DictCacher()
     >>> cache['test'] = True
@@ -34,8 +35,9 @@ class DictCacher(dict):
 
 
 class WrapperCacher:
-    """Wrapper class for cache classes that use .get, .set and .has_key methods instead of item assignments,
-    eg. django FileBasedClass
+    """
+    Wrapper class for cache classes that use .get, .set and .has_key methods
+    instead of item assignments, eg. django FileBasedClass
     """
     def __init__(self, obj,  timeout=None, version=None):
         self.obj = obj
@@ -56,7 +58,8 @@ class WrapperCacher:
 
 
 class LocalCacher:
-    """Simple 'Local' cacher with a maximum amount of items
+    """
+    Simple 'Local' cacher with a maximum amount of items
 
     >>> cache = LocalCacher(2)
     >>> cache.max_items

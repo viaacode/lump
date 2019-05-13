@@ -167,8 +167,8 @@ class MultiThread:
 
 def singlethreaded(*args, pass_thread_id=True, class_method_with_self=False, pre_start=False, pbar=None, **kwargs):
     """
-    To easily disable the multithreading, and just run sequentially (just replace `@multithreaded` with
-    `@singlethreaded`)
+    To easily disable the multithreading, and just run sequentially (just replace ``@multithreaded`` with
+    ``@singlethreaded``)
 
     >>> from collections import namedtuple
     >>> @singlethreaded(2)
@@ -226,6 +226,8 @@ def singlethreaded(*args, pass_thread_id=True, class_method_with_self=False, pre
     True
     >>> all(k['thread_id'] in [0, 1] for a, k in res)
     True
+
+    .. seealso:: :func:`multithreaded`
     """
     del args, kwargs
 
@@ -321,6 +323,8 @@ def multithreaded(*args, class_method_with_self=False, pre_start=False, **kwargs
     True
     >>> all(k['thread_id'] in [0, 1] for a, k in res)
     True
+
+    .. seealso:: :func:`singlethreaded`
     """
 
     # Add 'None' processor
