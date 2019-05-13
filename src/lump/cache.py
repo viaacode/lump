@@ -102,7 +102,9 @@ class DummyCacher:
     >>> cache = DummyCacher()
     >>> cache['test'] = True
     >>> print(cache['test'])
-    None
+    Traceback (most recent call last):
+    ...
+    KeyError: 'test'
     >>> 'test' in cache
     False
     >>> cache['test2'] = 2
@@ -111,7 +113,7 @@ class DummyCacher:
     """
     @staticmethod
     def __getitem__(i):
-        return None
+        raise KeyError(i)
 
     @staticmethod
     def __setitem__(k, v):

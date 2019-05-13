@@ -1,6 +1,6 @@
 import logging
 
-from .cache import LocalCacher
+from .cache import LocalCacher, DummyCacher
 from functools import partial
 import time
 
@@ -139,11 +139,11 @@ def memoize(f, cacher=None):
         x = _get_cache_key(*args, **kwargs)
 
         if x in cacher:
-            _log('%s(%s): got: %s' % (memoize.__name__, f.__name__, str(x)))
+            _log('%s(%s): got: %s', memoize.__name__, f.__name__, DeferredStr(x))
             return cacher[x]
 
         res = f(*args, **kwargs)
-        _log('%s(%s): set: %s' % (memoize.__name__, f.__name__, str(x)))
+        _log('%s(%s): set: %s', memoize.__name__, f.__name__, DeferredStr(x))
         cacher[x] = res
         return res
 
@@ -171,30 +171,57 @@ def cache(cacher=None):
 
 def classcache(f):
     """Usage:
-    > class SomeClass:
-    >    @classcache
-    >    def someFunc(self):
+
+    >>> class SomeClass:
+    ...     def __init__(self):
+    ...         self._call_count = 0
+    ...         self._cacher = None
+    ...
+    ...     @classcache
+    ...     def someFunc(self):
+    ...         self._call_count += 1
+    ...         return self._call_count
+    >>> # no class cacher set...
+    >>> cls = SomeClass()
+    >>> cls.someFunc()
+    1
+    >>> cls.someFunc()
+    2
+    >>>
+    >>> class SomeClassWithCacher(SomeClass):
+    ...     def __init__(self):
+    ...         super().__init__()
+    ...         self._cacher = LocalCacher()
+    ...
+    ...     def get_cacher(self):
+    ...         return self._cacher
+    >>> # with a class cacher set
+    >>> cls = SomeClassWithCacher()
+    >>> cls.someFunc()
+    1
+    >>> cls.someFunc()
+    1
     """
     def _cacher(*args, **kwargs):
         global _log
         obj = args[0]
-        cacher = obj.get_cacher()
+        cacher = obj.get_cacher() if hasattr(obj, 'get_cacher') else None
         if not cacher:
-            cacher = cache.DummyCacher()
+            cacher = DummyCacher()
         x = _get_cache_key(f.__name__, *args[1:], **kwargs)
 
         if hasattr(obj.__class__, 'classcacheVersionNumber'):
             x = '%s|v:%d' % (x, obj.__class__.classcacheVersionNumber)
-            _log('version keyed: %s' % x)
+            _log('version keyed: %s', x)
 
         try:
-            _log('%s.%s:%s got: %s' % (obj.__class__.__name__, f.__name__, classcache.__name__, str(x)))
+            _log('%s.%s:%s got: %s', obj.__class__.__name__, f.__name__, classcache.__name__, DeferredStr(x))
             return cacher[x]
         except KeyError:
             pass
 
         res = f(*args, **kwargs)
-        _log('%s.%s:%s set: %s' % (obj.__class__.__name__, f.__name__, classcache.__name__, str(x)))
+        _log('%s.%s:%s set: %s', obj.__class__.__name__, f.__name__, classcache.__name__, DeferredStr(x))
         cacher[x] = res
         return res
 
