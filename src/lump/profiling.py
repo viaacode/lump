@@ -6,17 +6,26 @@ class timeit:
     """Helper class to easily report long running processes.
     Usage:
 
-        with timeit("Took a long time", 5000):
-            time.sleep(6)
+        >>> import logging, sys, time
+        >>> logging.basicConfig(level=logging.WARNING)
+        >>> logger = logging.getLogger('test')
+        >>> logger.setLevel(logging.WARNING)
+        >>> logger.addHandler(logging.StreamHandler(sys.stdout))
+        >>> with timeit("Took a long time", 1000, logger=logger):
+        ...    time.sleep(2)
+        Took a long time: 2...ms
+        >>> with timeit("Took a long time", 1000, logger=logger):
+        ...    pass
 
     Or alternatively you can:
 
-        timer = timeit()
-        ...
-        print(timer.elapsed())
-        timer.restart()
-        ...
-        print(timer.elapsed())
+        >>> timer = timeit()
+        >>> time.sleep(1)
+        >>> print(timer.elapsed())
+        100...
+        >>> timer.restart()
+        >>> print(timer.elapsed())
+        0...
     """
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
@@ -25,7 +34,7 @@ class timeit:
     def __init__(self, text=None, min_time=None, callback=None, logger=None, postfix=None):
         """
         :param text: str
-        :param min_time: int Minimum duration to start reporting in milsliseconds
+        :param min_time: int Minimum duration to start reporting in milliseconds
         :param callback: callable
         """
         self.text = text
@@ -39,7 +48,6 @@ class timeit:
 
     def restart(self):
         self.start = time.monotonic()
-        return self.start
 
     def elapsed(self):
         return (time.monotonic() - self.start)*1000
