@@ -9,9 +9,11 @@ Submodules
    lump.cache
    lump.config
    lump.decorators
+   lump.http
    lump.multithreading
    lump.null
    lump.profiling
+   lump.stream
 
 Module contents
 ---------------
