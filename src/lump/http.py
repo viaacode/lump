@@ -20,9 +20,13 @@ class RequestIterator:
 
         self.req = requests.get(url, headers=header, stream=True, **kwargs)
         self.chunk_size = chunk_size
+        self._iterator = self.req.iter_content(self.chunk_size)
 
     def __iter__(self):
-        return self.req.iter_content(self.chunk_size)
+        return self._iterator
+
+    def __next__(self):
+        return next(self._iterator)
 
     def as_stream(self):
         """
@@ -30,4 +34,4 @@ class RequestIterator:
 
         :return: IteratorToStream
         """
-        return IteratorStream(iter(self), on_update=partial(self.pbar.update, self.chunk_size))
+        return IteratorStream(self, on_update=partial(self.pbar.update, self.chunk_size))
