@@ -17,6 +17,7 @@ import sys
 from datetime import datetime
 
 root_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+sys.path.insert(0, os.path.join(os.path.abspath(root_dir), 'src'))
 sys.path.insert(0, os.path.abspath(root_dir))
 
 # -- Project information -----------------------------------------------------
