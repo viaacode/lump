@@ -1,7 +1,7 @@
 from tqdm import tqdm
 import requests
 from functools import partial
-from lump.stream import IteratorToStream
+from lump.stream import IteratorStream
 
 
 class RequestIterator:
@@ -30,4 +30,4 @@ class RequestIterator:
 
         :return: IteratorToStream
         """
-        return IteratorToStream(iter(self), on_update=partial(self.pbar.update, self.chunk_size))
+        return IteratorStream(iter(self), on_update=partial(self.pbar.update, self.chunk_size))
