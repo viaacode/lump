@@ -32,6 +32,6 @@ class RequestIterator:
         """
         Returns a stream of the file contents.
 
-        :return: IteratorToStream
+        :return: IteratorStream
         """
         return IteratorStream(self, on_update=partial(self.pbar.update, self.chunk_size))
