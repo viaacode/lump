@@ -10,5 +10,4 @@
 
 Extra
 -----
- - `Code Coverage <coverage/index.html>`_
  - :ref:`genindex`
