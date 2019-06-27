@@ -1,7 +1,7 @@
 from io import RawIOBase
 
 
-class IteratorToStream(RawIOBase):
+class IteratorStream(RawIOBase):
     """
     Access an iterator as a bytestream
     """
