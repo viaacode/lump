@@ -2,6 +2,9 @@ from tqdm import tqdm
 import requests
 from functools import partial
 from lump.stream import IteratorStream
+from hashlib import sha1
+import uuid
+from lxml import objectify
 
 
 class RequestIterator:
@@ -35,3 +38,37 @@ class RequestIterator:
         :return: :class:`lump.stream.IteratorStream`
         """
         return IteratorStream(self, on_update=partial(self.pbar.update, self.chunk_size))
+
+
+def dbus_connect(host, user, password):
+    """
+    Minimalistic D-Bus login
+
+    :param host: Host (including schema) to connect to
+    :param user: Login username
+    :param password: Login password
+    :return: request.Session
+    """
+    conn = requests.Session()
+    login_url = host + '/login'
+    login_data = dict(dbus="AUTH DBUS_COOKIE_SHA1 %s" % (user,))
+    response = conn.post(login_url, data=login_data)
+    resp = objectify.fromstring(response.content)
+    dbus = resp['items']['item']['dbus']
+
+    resp = str(dbus).split(' ')
+
+    if resp[0] != 'DATA':
+        raise ValueError(str(dbus))
+
+    challenge = resp[3]
+    random = uuid.uuid4().hex[:10]
+    challenge_response = sha1(bytes(':'.join([challenge, random, password]), 'utf-8')).hexdigest()
+    login_data = dict(dbus='DATA %s %s' % (random, challenge_response))
+    response = conn.post(login_url, data=login_data)
+    resp = objectify.fromstring(response.content)
+    dbus = resp['items']['item']['dbus']
+    resp = str(dbus).split(' ')
+    if resp[0] != 'OK':
+        raise ValueError(str(dbus))
+    return conn
