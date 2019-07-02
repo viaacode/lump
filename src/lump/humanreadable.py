@@ -30,12 +30,13 @@ def format_metric(num, suffix=None, base=None, midfix=None, prefixes=None, preci
     if abs(num) < base:
         return format_string % (num, '', '', suffix)
 
-    num /= base
+    prev_unit = ''
 
     for unit in prefixes:
         if abs(num) < base:
-            return format_string % (num, unit, midfix, suffix)
+            return format_string % (num, prev_unit, midfix, suffix)
         num /= base
+        prev_unit = unit
     return format_string % (num, unit, midfix, suffix)
 
 
