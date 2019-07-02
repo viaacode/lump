@@ -28,7 +28,11 @@ setup(
     extras_require={
         'test': [
             "pytest>=4.2.0"
-        ]
+        ],
+        'gunicorn': [
+            "gunicorn>=19.9.0",
+            "psutil==5.6.3",
+        ],
     },
     platforms='any'
 )
