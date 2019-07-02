@@ -1,3 +1,8 @@
+from functools import partial
+
+_prefixes = 'kMGTPEZY'
+
+
 def format_metric(num, suffix=None, base=None, midfix=None, prefixes=None, precision=None):
     """
     Format a number using prefixes according to base (by default using metric
@@ -15,16 +20,15 @@ def format_metric(num, suffix=None, base=None, midfix=None, prefixes=None, preci
         midfix = ''
 
     if prefixes is None:
-        prefixes = 'KMGTPEZY'
+        prefixes = _prefixes
 
     if precision is None:
         precision = 2
 
-    format_string = '%%.%df' % (precision,)
-    format_string += '%s%s%s'
+    format_string = '%%.%df%%s%%s%%s' % (precision,)
 
     if abs(num) < base:
-        return format_string % (num, '', midfix, suffix)
+        return format_string % (num, '', '', suffix)
 
     num /= base
 
@@ -33,3 +37,6 @@ def format_metric(num, suffix=None, base=None, midfix=None, prefixes=None, preci
             return format_string % (num, unit, midfix, suffix)
         num /= base
     return format_string % (num, unit, midfix, suffix)
+
+
+format_binary = partial(format_metric, midfix='i', base=1024, prefixes=_prefixes.upper())
