@@ -16,10 +16,20 @@ import os
 import sys
 from datetime import datetime
 import re
+from sphinx.ext.apidoc import main as sphinx_apidoc
+
 
 root_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-sys.path.insert(0, os.path.join(os.path.abspath(root_dir), 'src'))
+src_dir = os.path.join(os.path.abspath(root_dir), 'src')
+sys.path.insert(0, src_dir)
 sys.path.insert(0, os.path.abspath(root_dir))
+docs_modules_dir = os.path.join(os.path.abspath(root_dir), 'docs/modules')
+
+
+# -- Auto-generate module docs -----------------------------------------------
+
+sphinx_apidoc(['-e', '-f', '-o', docs_modules_dir, src_dir])
+os.remove(os.path.join(docs_modules_dir, 'modules.rst'))
 
 # -- Project information -----------------------------------------------------
 
