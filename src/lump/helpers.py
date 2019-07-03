@@ -1,3 +1,6 @@
+# Some code copied from ebu/benchmarkstt (by original author), see
+# https://github.com/ebu/benchmarkstt/blob/master/LICENCE.md
+
 from functools import partial, wraps
 
 

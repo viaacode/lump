@@ -1,6 +1,8 @@
 from lump.helpers import DeferredCallback, make_printable
 import pytest
 
+# Some code copied from ebu/benchmarkstt (by original author), see
+# https://github.com/ebu/benchmarkstt/blob/master/LICENCE.md
 
 def cb(txt):
     def _():

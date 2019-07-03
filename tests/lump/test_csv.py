@@ -2,6 +2,9 @@ import benchmarkstt.csv as csv
 import pytest
 from io import StringIO
 
+# Code copied from ebu/benchmarkstt (by original author), see
+# https://github.com/ebu/benchmarkstt/blob/master/LICENCE.md
+
 example1 = '''
 Some line, some other \t  \t
 dsfgdsg
