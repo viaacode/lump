@@ -9,6 +9,9 @@ with open('README.rst') as f:
 with open('requirements.txt') as f:
     requirements = list(map(str.rstrip, f.readlines()))
 
+with open('requirements.gunicorn.txt') as f:
+    requirements_gunicorn = list(map(str.rstrip, f.readlines()))
+
 setup(
     name='lump',
     url='https://github.com/viaacode/lump/',
@@ -29,10 +32,7 @@ setup(
         'test': [
             "pytest>=4.2.0"
         ],
-        'gunicorn': [
-            "gunicorn>=19.9.0",
-            "psutil==5.6.3",
-        ],
+        'gunicorn': requirements_gunicorn,
     },
     platforms='any'
 )

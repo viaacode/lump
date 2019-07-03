@@ -1,6 +1,6 @@
 from gunicorn.app.base import BaseApplication
 import multiprocessing
-from lump.keypress import KeyPressHandler, InteractiveTerminalHandler
+from lump.keypress import InteractiveTerminalHandler
 from multiprocessing import Process
 import psutil
 import logging
