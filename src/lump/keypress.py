@@ -5,6 +5,8 @@ import sys
 import termios
 import tty
 import logging
+from lump.csv import reader, UnclosedQuoteError
+from io import StringIO
 
 logger = logging.getLogger(__name__)
 Option = namedtuple('Option', ('input', 'description', 'callback'))
@@ -13,9 +15,6 @@ stdout = sys.stdout
 
 
 class Options:
-    class NO_ACTION:
-        pass
-
     def __init__(self, auto_include_help=None):
         self._options = {}
         self.help_title = 'Available Options'
@@ -23,9 +22,7 @@ class Options:
 
     def _init_(self, auto_include_help=None):
         if auto_include_help is None or auto_include_help:
-            self.register('help',
-                          self.print_help,
-                          dedent(self.print_help.__doc__).strip())
+            self['help'] = self.print_help
 
     def print_help(self):
         """
@@ -50,18 +47,25 @@ class Options:
         self._options[value] = Option(value, description, callback)
 
     def run(self, value, *args):
-        if value not in self._options:
+        if value not in self:
             logger.warning('Unknown command %r, possible commands: %s', value, ', '.join(self._options.keys()))
-            return self.NO_ACTION
-        return self._options[value].callback(*args)
+            return
+        return self[value].callback(*args)
+
+    def __contains__(self, item):
+        return item in self._options
+
+    def __getitem__(self, item):
+        return self._options[item]
+
+    def __setitem__(self, key, value):
+        self.register(key, value, dedent(value.__doc__).strip())
 
 
 class CharOptions(Options):
     def _init_(self, auto_include_help=None):
         if auto_include_help is None or auto_include_help:
-            self.register('?',
-                          self.print_help,
-                          dedent(self.print_help.__doc__).strip())
+            self['?'] = self.print_help
 
     def _process(self, char):
         self.run(char)
@@ -75,11 +79,18 @@ class CharOptions(Options):
 
 class ComplexOptions(Options):
     """
-    Options with possibility of arguments
+    Options with possibility of arguments, interpreted with the whitespace
+    dialect csv parser
     """
-    def run(self, value, *args):
 
-        raise NotImplementedError()
+    def run(self, value, *args):
+        try:
+            args = next(iter(reader(StringIO(value), dialect='whitespace')))
+        except StopIteration:
+            # empty line
+            return
+        value = args.pop(0)
+        super().run(value, *args)
 
 
 class InteractiveTerminalHandler:
@@ -101,17 +112,26 @@ class InteractiveTerminalHandler:
         stdout.flush()
 
         if char == '\n':
-            self.options.run(self._buffer)
-            self._buffer = ''
-        else:
-            self._buffer += char
+            try:
+                self.options.run(self._buffer)
+                self._buffer = ''
+                return
+            except UnclosedQuoteError:
+                self._buffer += char
+                return
+            except BaseException as e:
+                logger.exception(e)
+                self._buffer = ''
+                return
+
+        self._buffer += char
 
     def __init__(self):
         self.process = None
         self._init_()
 
     def _init_(self):
-        self.options = Options()
+        self.options = ComplexOptions()
         self._buffer = ''
 
     def register(self, *args, **kwargs):

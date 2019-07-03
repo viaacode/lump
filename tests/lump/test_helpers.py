@@ -4,6 +4,7 @@ import pytest
 # Some code copied from ebu/benchmarkstt (by original author), see
 # https://github.com/ebu/benchmarkstt/blob/master/LICENCE.md
 
+
 def cb(txt):
     def _():
         _.cb_count += 1
