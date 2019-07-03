@@ -15,6 +15,7 @@
 import os
 import sys
 from datetime import datetime
+import re
 
 root_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 sys.path.insert(0, os.path.join(os.path.abspath(root_dir), 'src'))
@@ -26,12 +27,11 @@ project = 'lump'
 copyright = '%d, VIAA' % (datetime.today().year,)
 author = 'VIAA'
 
-# The short X.Y version
-with open(os.path.join(root_dir, 'VERSION')) as f:
-    version = f.read().strip()
 # The full version, including alpha/beta/rc tags
-release = version
-
+with open(os.path.join(root_dir, 'VERSION')) as f:
+    release = f.read().strip()
+# The short X.Y version
+version = re.sub(r'^([0-9]+\.[0-9]+).*$', r'\1', release)
 
 # -- General configuration ---------------------------------------------------
 
@@ -69,7 +69,7 @@ master_doc = 'index'
 # Usually you set "language" from the command line for these cases.
 language = None
 
-html_extra_path=['./extra/']
+html_extra_path=[]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
