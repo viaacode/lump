@@ -1,6 +1,6 @@
 from gunicorn.app.base import BaseApplication
 import multiprocessing
-from lump.keypress import KeyPressHandler
+from lump.keypress import KeyPressHandler, InteractiveTerminalHandler
 from multiprocessing import Process
 import psutil
 import logging
@@ -66,14 +66,14 @@ class GunicornApplication(BaseApplication):
 class GunicornInteractiveApplication(GunicornApplication):
     """
     Usable to run a gunicorn application with sensible default and the possibility
-    to provide some general options using keypresses (e.g. memory information).
+    to provide some general options using commands (e.g. memory information).
     """
 
     def _init_(self):
         self.main_pid = os.getpid()
         self.main_process = psutil.Process(self.main_pid)
-        self.keypress_handler = KeyPressHandler()
-        self.keypress_handler.register('m', self._show_memory, 'Output current memory usage')
+        self.keypress_handler = InteractiveTerminalHandler()
+        self.keypress_handler.register('mem', self._show_memory, 'Output current memory usage')
 
     def run(self):
         process = Process(target=super().run)
